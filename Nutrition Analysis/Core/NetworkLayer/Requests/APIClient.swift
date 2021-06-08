@@ -39,8 +39,7 @@ class APIClient {
     }
     
     //MARK:- Home
-    static func getNutritionDetails<T:Decodable>(decodedType: T.Type, values: [String], completion:@escaping (T?,Error?)->Void) {
-        performRequest(decodedType: decodedType, route: APIRouter.nutritionDetails(values: values), completion: completion)
+    static func getNutritionDetails<T:Decodable>(decodedType: T.Type, value: String, completion:@escaping (T?,Error?)->Void) {
+        performRequest(decodedType: decodedType, route: APIRouter.nutritionDetails(value: value), completion: completion)
     }
-
 }

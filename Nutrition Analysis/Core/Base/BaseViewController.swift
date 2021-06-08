@@ -6,24 +6,44 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class BaseViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    let activityIndicator = CActivityIndicator()
 
-        // Do any additional setup after loading the view.
+    func setNavigationBarTitle(text: String, color: UIColor? = UIColor.init(hex: "070707")) {
+        let lbl = UILabel()
+        lbl.text = text
+        lbl.textColor = color ?? .red
+        lbl.font = UIFont(name: "Helvetica-Neue-Bold", size: 18)
+        self.navigationItem.titleView = lbl
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func navigationBarColor( color: UIColor? = UIColor.init(hex: "20314D")) {
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.tintColor = UIColor.white
+        navigationController?.navigationBar.barTintColor = color
+        UIApplication.shared.statusBarStyle = .lightContent
     }
-    */
 
+    func setNavBarClear() {
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.view.backgroundColor = UIColor.clear
+    }
+    
+    func removeNavBorder() {
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+    }
+
+    func showLoadingInticator() {
+        activityIndicator.start()
+    }
+    
+    func hideLoadingInticator() {
+        activityIndicator.stop()
+    }
 }

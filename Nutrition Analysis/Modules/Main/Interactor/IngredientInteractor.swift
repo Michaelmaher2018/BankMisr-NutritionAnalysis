@@ -7,11 +7,11 @@
 
 import Foundation
 
-class GetIngredientAPI: NSObject {
+class IngredientInteractor: NSObject {
     
     //MARK: - getNutritionDetails
-    func getNutritionDetails(values: [String], completionHandler: @escaping(IngredientModel?, Error?) -> ())  {
-        APIClient.getNutritionDetails(decodedType: IngredientModel.self, values: values) { (response: IngredientModel?, error: Error?) in
+    func getNutritionDetails(value: String, completionHandler: @escaping(IngredientModel?, Error?) -> ())  {
+        APIClient.getNutritionDetails(decodedType: IngredientModel.self, value: value) { (response: IngredientModel?, error: Error?) in
             if let response = response {
                 completionHandler(response, nil)
             } else {
@@ -19,5 +19,4 @@ class GetIngredientAPI: NSObject {
             }
         }
     }
-
 }

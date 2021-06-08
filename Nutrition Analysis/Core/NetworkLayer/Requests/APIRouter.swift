@@ -3,15 +3,14 @@ import Alamofire
 
 
 enum APIRouter: URLRequestConvertible {
-    //MARK:- Home
-    case nutritionDetails(values: [String])
-    case getProviderHomeApi
+
+    case nutritionDetails(value: String)
     
     //MARK:- HTTPMETHOD
     private var method : HTTPMethod {
         switch self {
-        case .nutritionDetails, .getProviderHomeApi:
-            return .post
+        case .nutritionDetails:
+            return .get
         }
     }
 
@@ -19,11 +18,8 @@ enum APIRouter: URLRequestConvertible {
     private var path: String {
         switch self {
         case .nutritionDetails:
-            return "nutrition-details"
-        case .getProviderHomeApi:
-            return "store/home"
+            return "nutrition-data"
         }
-
     }
 
     //MARK:- ENCODING
@@ -37,43 +33,29 @@ enum APIRouter: URLRequestConvertible {
     }
 
     //MARK:- ENCODING
-    private var parameters: [String:Any]? {
+    private var parameters: [String: Any]? {
         switch self {
-        case .nutritionDetails(values: let values):
-            return ["ingr": values]
-        case .getProviderHomeApi:
-            return ["field": "",
-                    "user_type": "vendor"]
+        case .nutritionDetails(value: let value):
+            return ["ingr": value]
         }
-
     }
 
     func asURLRequest() throws -> URLRequest {
-        let url = "https://api.edamam.com/api/"
-        let queryParams = "app_id=\(Constants.appId.rawValue)&app_key=\(Constants.appKey.rawValue)"
+        let url = try Constants.baseURL.asURL()
+        
+        let ingr = (parameters?.first?.value) as? String
+        let ingrPath = "&ingr=\(ingr ?? "")".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let queryParams = "app_id=\(Constants.appID)&app_key=\(Constants.apiKey)" + ingrPath
         var urlRequest = URLRequest(url: URL(string: "\(url)\(path)?\(queryParams)")!)
         //HTTP METHOD
         urlRequest.httpMethod = method.rawValue
 
         //HEADER
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-
-        //        PARAMETERS
-        if let parameters = parameters {
-            do {
-                urlRequest.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: [])
-            } catch{
-                throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
-            }
-        }
+        urlRequest.addValue(Constants.application_json, forHTTPHeaderField: Constants.contentType)
+        urlRequest.addValue(Constants.application_json, forHTTPHeaderField: "Accept")
 
         //DEBUG DESCRIPTION
-        print("Headers \(urlRequest.allHTTPHeaderFields)")
-        print("Request URL \(urlRequest.url)")
-        print("Parameters \(parameters)")
-        print("Method \(urlRequest.httpMethod)")
-
-        return try! encoding.encode(urlRequest, with: parameters)
+        debugPrint("Method:\(urlRequest.httpMethod ?? "") | Request URL \(urlRequest.url?.description ?? "") | ingr:\(ingr ?? "")")
+        return try! encoding.encode(urlRequest, with: nil)
     }
 }

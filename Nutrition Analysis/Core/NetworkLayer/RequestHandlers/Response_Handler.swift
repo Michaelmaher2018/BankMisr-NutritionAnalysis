@@ -45,8 +45,6 @@ class Response_Handler: UIViewController {
         return (nil,false)
     }
     
-    
-
     private func showError(with error: String) {
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         var alert = UIAlertController()
@@ -56,6 +54,4 @@ class Response_Handler: UIViewController {
         alert.addAction(ok)
         keyWindow.rootViewController!.present(alert,animated: true)
     }
-
-    
 }

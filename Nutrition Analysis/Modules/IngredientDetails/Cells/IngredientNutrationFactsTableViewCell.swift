@@ -9,15 +9,11 @@ import UIKit
 
 class IngredientNutrationFactsTableViewCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var valueLabel: UILabel!
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    func setupCell(data: IngredientFactCellviewModel) {
+        valueLabel.text = data.getNutritionValue()
+        nameLabel.text = data.getNutritionName()
     }
-    
 }
